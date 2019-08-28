@@ -32,23 +32,24 @@ export default {
       apiUrl: config.apiUrl
     }
   },
+
   methods: {
     login () {
       let input = this.qs.stringify({
         username: this.loginForm.username,
         password: this.loginForm.password
       })
-      // console.log(input)
-      // post(this.apiUrl + '/login/checkLogin', input, 1)
-      this.axios
-        .post(this.apiUrl + '/login/checkLogin', input)
-        .then(successResponse => {
-          if (successResponse.data.code === 200) {
-            this.$router.replace({path: '/index'})
-          }
-        })
-        .catch(failResponse => {
-        })
+      // console.log(this.Encrypt(input))
+      this.post('/login/checkLogin', input, 1)
+      // this.axios
+      //   .post(this.apiUrl + '/login/checkLogin', this.Encrypt(input))
+      //   .then(successResponse => {
+      //     if (successResponse.data.code === 200) {
+      //       this.$router.replace({path: '/index'})
+      //     }
+      //   })
+      //   .catch(failResponse => {
+      //   })
     }
   }
 }
