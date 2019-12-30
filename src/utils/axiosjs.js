@@ -7,12 +7,13 @@ import store from 'vuex'
 import {aes, sign} from './cryptojs'
 import { Message } from 'element-ui'
 
-var isPro = process.env.NODE_ENV === 'production'
+// var isPro = process.env.NODE_ENV === 'production'
 
 const ajax = axios.create({
-  baseURL: isPro ? config.apiUrl : '/apis', // url前缀
+  baseURL: config.apiUrl,
+  // baseURL: isPro ? config.apiUrl : '/apis', // url前缀
   timeout: 10000, // 超时毫秒数
-  withCredentials: true // 携带认证信息cookie
+  withCredentials: false // 携带认证信息cookie
 })
 
 /**
@@ -35,7 +36,12 @@ const postJson = (url, params, level) => ajax(getConfig(url, 'post', true, param
  * @param params 参数
  * @param level 0:无加密，1：参数加密，2: 签名+时间戳； 默认0
  */
-const post = (url, params, level) => ajax(getConfig(url, 'post', false, params, level)).then(res => successback(res)).catch(error => errback(error))
+const post = (url, params, level) => ajax(getConfig(url, 'post', false, params, level))
+  .then(res => successback(res))
+  .catch(error => {
+    console.log(error)
+    errback(error)
+  })
 /**
  * delete方式请求 url传参
  * @param url 请求url
@@ -81,16 +87,7 @@ const param2String = data => {
 
 // 错误回调函数
 const errback = error => {
-  if ('code' in error) {
-    // 未登录
-    if (error.code === 30001) {
-      sessionStorage.clear()
-      window.location.href = '/'
-      return
-    }
-    return Promise.reject(error)
-  }
-  // 网络异常,或链接超时
+  console.log(error)
   Message({
     message: error.message,
     type: 'error'
@@ -99,18 +96,19 @@ const errback = error => {
 }
 // 成功回调函数
 const successback = res => {
-  if (res.status === 200 && res.data.code !== 20000) {
-    let errMsg = {'30002': '对不起无权限', '30003': '验签失败'}
-    let msg = errMsg[res.data.code]
-    if (msg) {
-      Message({
-        message: errMsg[res.data.code],
-        type: 'error'
-      })
+  let ret
+  if ('data' in res) {
+    let str = aes.de(res.data)
+    console.log(str)
+    let str2 = trim(str)
+    ret = JSON.parse(str2)
+    if (ret.info.token) {
+      localStorage.setItem('token', ret.info.token)
     }
-    return Promise.reject(res.data)
+  } else {
+    ret = {code: -1, errMsg: '返回参数有误！'}
   }
-  return res.data
+  return ret
 }
 
 /**
@@ -131,6 +129,10 @@ const getConfig = (url, method, isjson, params, level = 0) => {
   }
   // 时间戳
   if (level === 1) { // 加密
+    let token = localStorage.getItem('token')
+    if (token) {
+      params.info.token = token
+    }
     params = {encrypt: aes.en(JSON.stringify(params))}
   } else if (level === 2) { // 签名
     let timestamp = new Date().getTime()
@@ -166,6 +168,13 @@ const getConfig = (url, method, isjson, params, level = 0) => {
   }
   console.log(config_.data)
   return config_
+}
+
+// noinspection JSAnnotator
+const trim = (value) => {
+  /** 去除首尾不可见字符 */
+  let pattern = new RegExp(String.fromCharCode(0), 'gm')
+  return value.replace(pattern, '')
 }
 
 // 统一方法输出口

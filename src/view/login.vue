@@ -4,7 +4,7 @@
            label-width="0px">
     <h3 class="login_title">系统登录</h3>
     <el-form-item>
-      <el-input type="text" v-model="loginForm.username"
+      <el-input type="text" v-model="loginForm.account"
                 auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
     <el-form-item>
@@ -25,7 +25,7 @@ export default {
   data () {
     return {
       loginForm: {
-        username: '',
+        account: '',
         password: ''
       },
       responseResult: [],
@@ -35,21 +35,46 @@ export default {
 
   methods: {
     login () {
-      let input = this.qs.stringify({
-        username: this.loginForm.username,
-        password: this.loginForm.password
-      })
-      // console.log(this.Encrypt(input))
-      this.post('/login/checkLogin', input, 1)
-      // this.axios
-      //   .post(this.apiUrl + '/login/checkLogin', this.Encrypt(input))
-      //   .then(successResponse => {
-      //     if (successResponse.data.code === 200) {
-      //       this.$router.replace({path: '/index'})
-      //     }
-      //   })
-      //   .catch(failResponse => {
-      //   })
+      if (this.loginForm.account.trim() == null || this.loginForm.account.trim() === '') {
+        this.$alertMessage('error', '请填写用户名！', true)
+        return
+      }
+      if (this.loginForm.password.trim() == null || this.loginForm.password.trim() === '') {
+        this.$alertMessage('error', '请填写密码！', true)
+        return
+      }
+      let input = {
+        info: {
+          'usercode': '', 'token': ''
+        },
+        data: {
+          'account': this.loginForm.account,
+          'password': this.md5(this.loginForm.password)
+        }
+      }
+      // console.log(input)
+      this.post('/login/checkLogin', input, 1).then(
+        (data) => {
+          if (data.info.code === '0') {
+            let usercode = data.data.usercode
+            if (usercode) {
+              localStorage.setItem('usercode', usercode)
+            }
+            let nickname = data.data.nickname
+            if (nickname) {
+              localStorage.setItem('nickname', nickname)
+            }
+            let avatarurl = data.data.avatarurl
+            if (avatarurl) {
+              localStorage.setItem('avatarurl', avatarurl)
+            }
+            this.$alertMessage('success', '成功', true)
+            this.$router.push({path: '/'})
+          } else {
+            this.$alertMessage('error', data.info.errMsg, true)
+          }
+        }
+      )
     }
   }
 }
