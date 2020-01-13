@@ -11,7 +11,7 @@
         <div v-if="isLogin">
           <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
-              <span><el-avatar shape="square" :size="30" :fit="fit" :src="url"></el-avatar></span>
+              <span><el-avatar shape="square" :size="30" fit="fit" :src="url"></el-avatar></span>
               <span>{{nickname}}</span>
             </span>
             <el-dropdown-menu slot="dropdown">
@@ -91,11 +91,11 @@ export default {
           break
         case 'i':
           // 个人信息
-          this.$alertMessage('info', '个人信息', true)
+          this.$router.push({path: '/userinfo'})
           break
         case 's':
           // 设置
-          this.$alertMessage('info', '设置', true)
+          this.$router.push({path: '/blogsetting'})
           break
       }
     }

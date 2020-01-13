@@ -39,7 +39,7 @@ const postJson = (url, params, level) => ajax(getConfig(url, 'post', true, param
 const post = (url, params, level) => ajax(getConfig(url, 'post', false, params, level))
   .then(res => successback(res))
   .catch(error => {
-    console.log(error)
+    // console.log(error)
     errback(error)
   })
 /**
@@ -66,7 +66,7 @@ const put = (url, params, level) => ajax(getConfig(url, 'put', false, params, le
 
 // 参数转换
 const param2String = data => {
-  console.log('data', data)
+  // console.log('data', data)
   if (typeof data === 'string') {
     return data
   }
@@ -87,7 +87,7 @@ const param2String = data => {
 
 // 错误回调函数
 const errback = error => {
-  console.log(error)
+  // console.log(error)
   Message({
     message: error.message,
     type: 'error'
@@ -99,8 +99,8 @@ const successback = res => {
   let ret
   if ('data' in res) {
     let str = aes.de(res.data)
-    console.log(str)
     let str2 = trim(str)
+    // console.log(str2)
     ret = JSON.parse(str2)
     if (ret.info.token) {
       localStorage.setItem('token', ret.info.token)
@@ -166,7 +166,7 @@ const getConfig = (url, method, isjson, params, level = 0) => {
   } else if (method in {'post': true, 'put': true}) {
     config_.data = params
   }
-  console.log(config_.data)
+  // console.log(config_.data)
   return config_
 }
 
