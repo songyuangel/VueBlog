@@ -64,6 +64,7 @@ export default {
             this.nickname = ''
             this.url = ''
             this.$alertMessage('success', '注销成功', true)
+            this.$router.push({path: '/login'})
             // this.init()
             // this.reload()
           } else {

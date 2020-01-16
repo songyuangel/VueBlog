@@ -125,7 +125,7 @@ export default {
         data: {
         }
       }
-      this.post('/userinfo/getUserinfo', input, 1).then(
+      this.get('/userinfo/getUserinfo', input, 1).then(
         (data) => {
           // console.log(data)
           if (parseInt(data.info.code) < 0 && parseInt(data.info.code) > -200) {

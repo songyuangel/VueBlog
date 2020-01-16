@@ -52,7 +52,7 @@ export default {
           'password': this.md5(this.loginForm.password)
         }
       }
-      // console.log(input)
+      console.log(input)
       this.post('/login/checkLogin', input, 1).then(
         (data) => {
           if (data.info.code === '0') {
