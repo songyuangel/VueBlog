@@ -97,6 +97,7 @@ export default {
                 return
               }
               this.$alertMessage('success', '密码已更新！', true)
+              this.resetForm('ruleForm')
             })
         } else {
           return false

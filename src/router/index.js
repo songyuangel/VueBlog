@@ -44,6 +44,7 @@ export default new Router({
       meta: {
         keepAlive: true
       },
+      redirect: 'blogsetting/settingCategory',
       children: [
         {
           name: 'settingCategory',

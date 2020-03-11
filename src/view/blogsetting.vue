@@ -1,6 +1,6 @@
 <template>
   <el-container class="box-card" style="height: 100%; border: 1px solid #eee;">
-    <el-header style="height: 100%;padding:0"><div><img class="article-image" width="100%" src="../assets/eva.jpg" border="0" alt="我是图"/></div></el-header>
+    <el-header style="height: 100%;padding:0"><div><img class="article-image" width="100%" src="../assets/eva.jpg" border="0" alt="我是图" style="display:block;"/></div></el-header>
     <el-container>
     <el-aside width="200px" height="100%" style="background-color: rgb(238, 241, 246)">
       <el-row class="tac">

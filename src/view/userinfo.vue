@@ -104,9 +104,12 @@ export default {
                 this.isLogin = false
                 this.$alertMessage('error', data.info.errMsg, true)
                 this.$router.push({path: '/login'})
+              } else if (parseInt(data.info.code) === 0) {
+                this.$alertMessage('success', '信息已更新！', true)
+                this.init()
+              } else {
+                this.$alertMessage('error', data.info.errMsg, true)
               }
-              this.$alertMessage('success', '信息已更新！', true)
-              this.init()
             })
         } else {
           this.$alertMessage('warning', '请检查必填项！', true)

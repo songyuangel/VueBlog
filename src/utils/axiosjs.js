@@ -102,6 +102,7 @@ const successback = res => {
     let str2 = trim(str)
     // console.log(str2)
     ret = JSON.parse(str2)
+
     if (ret.info.token) {
       localStorage.setItem('token', ret.info.token)
     }

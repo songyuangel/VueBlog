@@ -2,7 +2,7 @@
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
     <div v-if="$route.meta.keepAlive" >
-        <Header/>
+        <Header style="position:fixed;"/>
     </div>
     <router-view v-if="isRouterAlive"/>
   </div>
